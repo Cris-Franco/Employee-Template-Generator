@@ -6,6 +6,9 @@ const path = require("path");
 const fs = require("fs");
 const util = require('util');
 
+const mkdirAsync = util.promisify(fs.mkdir);
+const writeFileAsync = util.promisify(fs.writeFile);
+
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
@@ -76,13 +79,23 @@ const init = async () => {
 
         addMore = adding;
     }
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
+    // After the user has input all employees desired, call the `render` function (required
+    // above) and pass in an array containing all employee objects; the `render` function will
+    // generate and return a block of HTML including templated divs for each employee!
+    const html = render(employees);
+    // After you have your html, you're now ready to create an HTML file using the HTML
+    // returned from the `render` function. Now write it to a file named `team.html` in the
+    // `output` folder. You can use the variable `outputPath` above target this location.
+    if (!fs.existsSync(outputPath)) {
+        const error = await mkdirAsync(OUTPUT_DIR);
+        error && console.error(error);
+    }
 
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
+    const error = await writeFileAsync(outputPath, html);
+    error && console.error(error);
+};
+
+init();
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
 
