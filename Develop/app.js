@@ -46,6 +46,36 @@ const confirm = [
     },
 ];
 
+
+const init = async () => {
+    const employees = [];
+    let addMore = true;
+
+    while (addMore) {
+        const { name, id, email, role } = await inquirer.prompt(questions);
+
+        if (role === 'Manager') {
+            const { officeNumber } = await inquirer.prompt(questionManager);
+
+            // new Manager object & push to employees array
+            employees.push(new Manager(name, id, email, officeNumber));
+        } else if (role === 'Engineer') {
+            const { github } = await inquirer.prompt(questionEngineer);
+
+            // new Engineer object & push to employees array
+            employees.push(new Engineer(name, id, email, github));
+        } else {
+            const { school } = await inquirer.prompt(questionIntern);
+
+            // new Engineer object & push to employees array
+            employees.push(new Intern(name, id, email, school));
+        }
+
+        // prompt if user wants to add more employee info
+        const { adding } = await inquirer.prompt(confirm);
+
+        addMore = adding;
+    }
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
