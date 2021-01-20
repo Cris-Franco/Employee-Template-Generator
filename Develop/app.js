@@ -4,15 +4,47 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const util = require('util');
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
-
+const Employee = require('./lib/Employee');
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+const questions = [
+    { name: 'name', message: "What's the employee's name" },
+    { name: 'id', message: "What's the employee's id" },
+    { name: 'email', message: "What's the employee's email" },
+    {
+        type: 'list',
+        name: 'role',
+        message: "What's the employee's role",
+        choices: ['Manager', 'Engineer', 'Intern'],
+    },
+];
+
+const questionManager = [
+    { name: 'officeNumber', message: "What's the manager's office number" },
+];
+
+const questionEngineer = [
+    { name: 'github', message: "What's the Engineer's github" },
+];
+
+const questionIntern = [
+    { name: 'school', message: "What's the Intern's school" },
+];
+
+const confirm = [
+    {
+        type: 'confirm',
+        name: 'adding',
+        message: 'Do you want to input more employee information',
+    },
+];
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
